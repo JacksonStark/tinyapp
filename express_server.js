@@ -19,3 +19,7 @@ app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });
 
+app.get('/hello', (req, res) => {
+  res.send('<html><body>Hello\n<br><b>World</b></body></html>\n')
+});
+
