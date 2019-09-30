@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/JacksonStark/tinyapp#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.3"
   }
 }
