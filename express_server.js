@@ -12,7 +12,7 @@ const urlDatabase = {
 // APP/SERVER LISTENING...
 
 app.listen(PORT, () => {
-  console.log(`Example app sslistxxening on port ${PORT}!`);
+  console.log(`Example app listening on port ${PORT}!`);
 });
 
 // GET REQUESTS
@@ -26,11 +26,10 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars)
 })
 
-app.get('/urls.json', (req, res) => {
-  res.json(urlDatabase);
-});
-
-app.get('/hello', (req, res) => {
-  res.send('<html><body>Hello\n<br><b>World</b></body></html>\n')
-});
+app.get('/urls/:shortURL', (req, res) => {
+  console.log('hello')
+  const shortURL = req.params.shortURL;
+  let templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL]};
+  res.render('urls_show', templateVars);
+})
 
