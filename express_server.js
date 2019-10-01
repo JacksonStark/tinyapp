@@ -29,7 +29,7 @@ const generateRandomString = () => {
 // POST REQUESTS
 
 app.post('/urls', (req, res) => {
-  let newShortUrl = generateRandomString()
+  let newShortUrl = generateRandomString();
   urlDatabase[newShortUrl] = req.body.longURL;
   res.redirect(`/urls/${newShortUrl}`);
   console.log(urlDatabase);
