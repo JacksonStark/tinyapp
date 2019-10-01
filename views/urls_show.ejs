@@ -16,6 +16,19 @@
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
       </div>
     <div class="card-footer text-muted"></div>
+
+    <!-- New Url Edit Form -->
+    <form method='POST' action='/urls/<%=shortURL %>/edit'>
+      <h1><label for='Edit'>Edit</label></h1>
+      <br>
+      New URL: 
+      <br><br>
+      <input type='text' id='Edit' name='newLongURL' class='form-control' style='width: 30%; margin: 0 auto'>
+      <br>
+      <button type='Submit' class='btn btn-primary'>Submit</button>
+    </form>
+
+    </form>
   </div>
   
   <!-- Bootstrap JS -->
