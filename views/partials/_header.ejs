@@ -16,9 +16,9 @@
           <button type='submit' class='btn btn-primary'>Logout</button>
         </form>
       <% } else { %>
-        <form method='POST' action='/login' style='float: right'>
-          <input type='text' name='username' class='form-control' placeholder='username' >
-          <button type='submit' class='btn btn-primary'>Sign In</button>
+      <form class="form-inline" method='POST' action='/login'></form>
+          <input type='text' name='username' class='form-control mr-sm-2' placeholder='username' style='width:200px'>
+          <button type='submit' class='btn btn-primary my-2 my-sm-0'>Sign In</button>
         </form>
       <% } %>
     </nav>
