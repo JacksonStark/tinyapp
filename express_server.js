@@ -76,7 +76,6 @@ app.get("/urls.json", (req, res) => { // get .json of urls
 });
 
 app.get('/urls', (req, res) => { // get urls index page
-  console.log(req.cookies);
   let templateVars = { urls: urlDatabase, username: req.cookies['username'] };
   res.render('urls_index', templateVars)
 })
@@ -92,7 +91,7 @@ app.get('/u/:shortURL', (req, res) => { // redirect to long url when short is cl
 
 app.get('/urls/:shortURL', (req, res) => { // shows the urls_show page
   const shortURL = req.params.shortURL;
-  let templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL]};
+  let templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL], username: req.cookies['username']};
   res.render('urls_show', templateVars);
 })
 
