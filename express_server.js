@@ -64,7 +64,7 @@ app.post('/urls/:shortURL/edit', (req, res) => { // modifies existing url and re
   res.redirect(`/urls/${shortURL}`);
 })
 
-app.post('/login', (req, res) => { // logs in and records username (cookie)
+app.post('/login', (req, res) => { // logs in and records user (cookie)
   const user = emailLookup(req.body.email);
 
   if (!user) { // Sending error if email is not in system
@@ -81,16 +81,21 @@ app.post('/login', (req, res) => { // logs in and records username (cookie)
   res.redirect('/urls');
 })
 
-app.post('/logout', (req, res) => { // logs out and clears username (cookie)
+app.post('/logout', (req, res) => { // logs out and clears user (cookie)
   res.clearCookie('user');
   res.redirect('/urls');
 })
 
-app.post('/register', (req, res) => { // creates new account and username cookie, records them in database
+app.post('/register', (req, res) => { // creates new account and user cookie, records them in database
+  const userObject = emailLookup(req.body.email);
   const email = req.body.email;
   const password = req.body.password;
   const uID = generateRandomString();
-  if (!email || !password) {
+  if (userObject.email === email) {
+    res.status(400);
+    let templateVars = { statusCode: res.statusCode, message: 'Email already in use!'}
+    res.render('error', templateVars)
+  } else if (!email || !password) {
     res.status(400);
     let templateVars = { statusCode: res.statusCode, message: ' Password or Email not entered!'}
     res.render('error', templateVars)
