@@ -11,8 +11,8 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.set('view engine', 'ejs');
 
 const urlDatabase = {
-  'b2xVn2': 'http://www.lighthouselabs.ca',
-  '9sm5zK': 'http://www.google.com'
+  'b2xVn2': { longURL: 'http://www.lighthouselabs.ca', userID: 'example1' },
+  '9sm5zK': { longURL: 'http://www.google.com', userID: 'example2' }
 };
 
 const users = {
@@ -47,9 +47,10 @@ const emailLookup = (email) => { // checks if email is in database
 
 // POST REQUESTS
 
-app.post('/urls', (req, res) => { // creates short urlm and links there
+app.post('/urls', (req, res) => { // creates short url and links there
   let newShortUrl = generateRandomString();
-  urlDatabase[newShortUrl] = req.body.longURL;
+  urlDatabase[newShortUrl] = {longURL: req.body.longURL, userID: req.cookies['user'].id};
+  console.log(urlDatabase)
   res.redirect(`/urls/${newShortUrl}`);
 })
 
@@ -123,11 +124,15 @@ app.get("/urls.json", (req, res) => { // get .json of urls
 });
 
 app.get('/urls', (req, res) => { // get urls index page
-  let templateVars = { urls: urlDatabase, user: req.cookies['user'] };
+  let templateVars = { urls: urlDatabase};
   res.render('urls_index', templateVars)
 });
 
 app.get('/urls/new', (req, res) => { // get Create New URl page
+  
+  if (!req.cookies['user']) {
+    res.redirect('/login');
+  }
   let templateVars = { user: req.cookies['user'] }
   res.render('urls_new', templateVars);
 });
@@ -139,7 +144,7 @@ app.get('/u/:shortURL', (req, res) => { // redirect to long url when short is cl
 
 app.get('/urls/:shortURL', (req, res) => { // shows the urls_show page
   const shortURL = req.params.shortURL;
-  let templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL], user: req.cookies['user']};
+  let templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL].longUrl, user: req.cookies['user']};
   res.render('urls_show', templateVars);
 });
 
