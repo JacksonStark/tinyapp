@@ -1,9 +1,11 @@
-const express = require('express');
-const app = express();
 const morgan = require('morgan');
-const PORT = 8080;
+const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
+const app = express();
+const PORT = 8080;
 
+app.use(cookieParser())
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}))
 app.set('view engine', 'ejs');
@@ -13,11 +15,15 @@ const urlDatabase = {
   '9sm5zK': 'http://www.google.com'
 };
 
+
 // APP/SERVER LISTENING...
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+
+// OTHER FUNCTIONS AND METHODS...
 
 const generateRandomString = () => {
   let result = '';
@@ -28,25 +34,36 @@ const generateRandomString = () => {
   return result;
   }
 
+
 // POST REQUESTS
 
-app.post('/urls', (req, res) => {
+app.post('/urls', (req, res) => { // creates short urlm and links there
   let newShortUrl = generateRandomString();
   urlDatabase[newShortUrl] = req.body.longURL;
   res.redirect(`/urls/${newShortUrl}`);
-  console.log(urlDatabase);
 })
 
-app.post('/urls/:shortURL/delete', (req, res) => {
+app.post('/urls/:shortURL/delete', (req, res) => { // deletes url and refreshes
   delete urlDatabase[req.params.shortURL];
   res.redirect('/urls');
 })
 
-app.post('/urls/:shortURL/edit', (req, res) => {
+app.post('/urls/:shortURL/edit', (req, res) => { // modifies existing url and refreshes
   const shortURL = req.params.shortURL;
   urlDatabase[req.params.shortURL] = req.body.newLongURL;
   res.redirect(`/urls/${shortURL}`);
 })
+
+app.post('/login', (req, res) => { // logs in and records username (cookie)
+  res.cookie('username', req.body.username)
+  res.redirect('/urls');
+})
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('username');
+  res.redirect('/urls');
+})
+
 
 // GET REQUESTS
 
@@ -59,7 +76,8 @@ app.get("/urls.json", (req, res) => { // get .json of urls
 });
 
 app.get('/urls', (req, res) => { // get urls index page
-  let templateVars = { urls: urlDatabase };
+  console.log(req.cookies);
+  let templateVars = { urls: urlDatabase, username: req.cookies['username'] };
   res.render('urls_index', templateVars)
 })
 
