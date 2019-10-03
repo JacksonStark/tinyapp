@@ -9,8 +9,13 @@
   <title>TinyApp</title>
 </head>
 <body>
-    <% include partials/_header.ejs %>
+<% include partials/_header.ejs %>
   <main style="margin: 1em;">
+    <% if (loggedIn === false) { %>
+      <h1>If only you were <a href='/login'>logged in</a>.</h1>
+      <br>
+      <h1>Or maybe <a href='/register'>registered</a>?</h1>
+    <% } else { %>
     <h1>Welcome  to  Jackson's  URL  Service</h1>
     <br><br>
     <h3>My URLs</h3>
@@ -43,6 +48,7 @@
         <% } %>
       </tbody>
     </table>
+    <% } %>
   </main>
   
   <!-- Bootstrap JS -->

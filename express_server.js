@@ -15,9 +15,7 @@ const urlDatabase = {
   '9sm5zK': { longURL: 'http://www.google.com', userID: 'example2' }
 };
 
-const users = {
-
-};
+const users = {};
 
 // APP/SERVER LISTENING...
 
@@ -45,18 +43,41 @@ const emailLookup = (email) => { // checks if email is in database
   return false;
 }
 
+const urlsForUser = (id) => {
+  let filteredUrls = {};
+  if (!id) return filteredUrls;
+
+  for (const key in urlDatabase) {
+    if (urlDatabase[key].userID === id) {
+      filteredUrls[key] = urlDatabase[key];
+    };
+  };
+  return filteredUrls;
+}
+
 // POST REQUESTS
 
 app.post('/urls', (req, res) => { // creates short url and links there
   let newShortUrl = generateRandomString();
   urlDatabase[newShortUrl] = {longURL: req.body.longURL, userID: req.cookies['user'].id};
-  console.log(urlDatabase)
   res.redirect(`/urls/${newShortUrl}`);
 })
 
 app.post('/urls/:shortURL/delete', (req, res) => { // deletes url and refreshes
-  delete urlDatabase[req.params.shortURL];
-  res.redirect('/urls');
+
+  if(req.cookies['user']) { // check if user is logged in
+    const userURLS = urlsForUser(req.cookies['user'].id);
+
+    if (userURLS[req.params.shortURL]) { // check if shortURL is in the userID object
+      delete urlDatabase[req.params.shortURL]; // THEN it may delete it from the database
+      res.redirect('/urls');
+    }
+  }
+
+  // Send error if they are not logged in
+  res.status(401);
+  res.send('\n 401 ERROR: \n\n You must be logged in to make deletions! \n\n')
+
 })
 
 app.post('/urls/:shortURL/edit', (req, res) => { // modifies existing url and refreshes
@@ -124,27 +145,53 @@ app.get("/urls.json", (req, res) => { // get .json of urls
 });
 
 app.get('/urls', (req, res) => { // get urls index page
-  let templateVars = { urls: urlDatabase};
+  let templateVars = {loggedIn: false};
+  
+  if (req.cookies['user']) {
+    const userURLS = urlsForUser(req.cookies['user'].id)
+    templateVars.loggedIn = true
+    templateVars.urls = userURLS
+  }
+
   res.render('urls_index', templateVars)
 });
 
 app.get('/urls/new', (req, res) => { // get Create New URl page
   
   if (!req.cookies['user']) {
-    res.redirect('/login');
+    res.redirect('/');
   }
   let templateVars = { user: req.cookies['user'] }
   res.render('urls_new', templateVars);
 });
 
 app.get('/u/:shortURL', (req, res) => { // redirect to long url when short is clicked
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  const destination = urlDatabase[req.params.shortURL];
+
+  if(destination){
+    res.redirect(destination.longURL);
+  } else {
+    res.status(404);
+    let templateVars = { statusCode: res.statusCode, message: 'Invalid URL'}
+    res.render('error', templateVars);
+  }
 });
 
 app.get('/urls/:shortURL', (req, res) => { // shows the urls_show page
-  const shortURL = req.params.shortURL;
-  let templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL].longUrl, user: req.cookies['user']};
+  let shortURL = req.params.shortURL
+  let templateVars = {loggedIn: false, shortURL: shortURL, longURL: urlDatabase[shortURL].longURL}
+  
+  if (req.cookies['user']) {
+    const userURLS = urlsForUser(req.cookies['user'].id);
+
+    if (typeof userURLS[shortURL] !== undefined) {  
+      templateVars.loggedIn = true;
+      templateVars.user = req.cookies['user'];
+      res.render('urls_show', templateVars);
+    };
+  };
+
+  
   res.render('urls_show', templateVars);
 });
 

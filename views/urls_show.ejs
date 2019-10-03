@@ -17,6 +17,8 @@
       </div>
     <div class="card-footer text-muted"></div>
 
+    <!-- Must be logged in to edit -->
+    <% if (loggedIn === true) { %>
     <!-- New Url Edit Form -->
     <form method='POST' action='/urls/<%=shortURL %>/edit'>
       <h1><label for='Edit'>Edit</label></h1>
@@ -27,8 +29,11 @@
       <br>
       <button type='Submit' class='btn btn-primary'>Submit</button>
     </form>
-
-    </form>
+    <% } else { %>
+      <br><br>
+      <h2>To edit the URL, you gotta <a href='/login'>log in</a> buddy.</h2>
+      <br><br>
+    <% } %>
   </div>
   
   <!-- Bootstrap JS -->
