@@ -11,6 +11,9 @@ module.exports = (bcrypt, users, getUserByEmail, generateRandomString) => {
   });
   
   router.get('/login', (req, res) => { // get Login page
+    if (req.session.user) {
+      res.redirect('/urls');
+    }
     res.render('login');
   });
 
@@ -44,7 +47,7 @@ module.exports = (bcrypt, users, getUserByEmail, generateRandomString) => {
     const password = req.body.password;
     const uID = generateRandomString();
     if (user.email === email) {
-      res.status(400);
+      res.status(400); 
       let templateVars = { statusCode: res.statusCode, message: 'Email already in use!'};
       res.render('error', templateVars);
     } else if (!email || !password) {
