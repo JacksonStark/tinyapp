@@ -12,6 +12,10 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 !["Screenshot of Create New URL Page"](https://github.com/JacksonStark/tinyapp/blob/master/docs/create-url-page.jpg?raw=true)
 
+##### Screenshot of Short URL Page
+
+!["Screenshot of Create New URL Page"](https://github.com/JacksonStark/tinyapp/blob/master/docs/short-url-page.jpg?raw=true)
+
 ##### Screenshot of Not Logged In Redirection Page
 
 !["Screenshot of Redirection Page if not logged in"](https://github.com/JacksonStark/tinyapp/blob/master/docs/redirection-page.jpg?raw=true)
