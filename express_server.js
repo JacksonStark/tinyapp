@@ -2,22 +2,22 @@ const bcrypt = require('bcryptjs');
 const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieSession = require('cookie-session')
-const {emailLookup} = require('./helpers.js')
+const cookieSession = require('cookie-session');
+const {getUserByEmail} = require('./helpers.js');
 const urlRoutes = require('./routes/urls.js');
-const authenticationRoutes = require('./routes/authentication.js')
+const authenticationRoutes = require('./routes/authentication.js');
 const app = express();
 const PORT = 8080;
 
 // MIDDLEWARE
 
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 app.use(cookieSession({
   name: 'session',
   secret: 'thisissupersecret'
-}))
+}));
 
 // SERVER LISTENING...
 
@@ -29,8 +29,6 @@ app.listen(PORT, () => {
 
 const users = {};
 
-// deleted
-
 const urlsForUser = (id) => {
   let filteredUrls = {};
   if (!id) return filteredUrls;
@@ -38,10 +36,10 @@ const urlsForUser = (id) => {
   for (const key in urlDatabase) {
     if (urlDatabase[key].userID === id) {
       filteredUrls[key] = urlDatabase[key];
-    };
-  };
+    }
+  }
   return filteredUrls;
-}
+};
 
 const urlDatabase = { // database storage
   'b2xVn2': { longURL: 'http://www.lighthouselabs.ca', userID: 'example1' },
@@ -57,11 +55,11 @@ const generateRandomString = () => { // creates unique id
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
-}
+};
 
 
 // ROUTERS MIDDLEWARE
 
 app.use('/urls', urlRoutes(users, urlsForUser, urlDatabase, defaultTemplateVars, generateRandomString));
 
-app.use('/', authenticationRoutes(bcrypt, users, emailLookup, generateRandomString));
+app.use('/', authenticationRoutes(bcrypt, users, getUserByEmail, generateRandomString));
