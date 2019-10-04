@@ -12,9 +12,9 @@
         </div>
       </div>
       <% if(typeof user != 'undefined') { %>
-        Logged In As: <%= user.email %>
+        Logged In as: <%= user.email %>
         <form method='POST' action='/logout' style='float: right'>
-          <button type='submit' class='btn btn-primary'>Logout</button>
+          <button type='submit' class='btn btn-primary' style='margin-left: 20px'>Logout</button>
         </form>
       <% } else { %>
         <div class='row'>

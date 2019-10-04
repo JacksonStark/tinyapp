@@ -84,7 +84,8 @@ module.exports = (users, urlsForUser, urlDatabase, defaultTemplateVars, generate
   
   router.post('/:shortURL/edit', (req, res) => { // modifies existing url and refreshes
     const shortURL = req.params.shortURL;
-    urlDatabase[req.params.shortURL] = req.body.newLongURL;
+    urlDatabase[req.params.shortURL].longURL = req.body.newLongURL;
+    console.log(urlDatabase, req.body.newLongURL);
     res.redirect(`/urls/${shortURL}`);
   });
   

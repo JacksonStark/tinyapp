@@ -16,7 +16,7 @@
       <br>
       <h1>Or maybe <a href='/register'>registered</a>?</h1>
     <% } else { %>
-    <h1>Welcome  to  Jackson's  URL  Service</h1>
+    <h1>Welcome  to  Jackson's  URL  Shortener</h1>
     <br><br>
     <h3>My URLs</h3>
     <table class="table">
@@ -48,6 +48,12 @@
         <% } %>
       </tbody>
     </table>
+    <br>
+    <form style="padding-left: 20px" action="/urls/new" method="GET">
+      <div class="form-group mb-2">
+        <button type="submit" class="btn btn-primary">Shorten New URL</button>
+      </div>
+    </form>
     <% } %>
   </main>
   
