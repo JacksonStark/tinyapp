@@ -36,7 +36,7 @@ module.exports = (users, urlsForUser, urlDatabase, defaultTemplateVars, generate
       if (typeof userURLS[shortURL] !== undefined) {
         templateVars.loggedIn = true;
         templateVars.user = req.session.user;
-        res.render('urls_show', templateVars);
+        return res.render('urls_show', templateVars);
       }
     }
     
