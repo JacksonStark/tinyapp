@@ -8,7 +8,6 @@ module.exports = (users, urlsForUser, urlDatabase, defaultTemplateVars, generate
 
   router.get('/', (req, res) => { // get urls index page
     const templateVars = {};
-    console.log(users);
     if (req.session.user) {
       const userURLS = urlsForUser(req.session.user.id);
       templateVars.loggedIn = true;
@@ -85,7 +84,6 @@ module.exports = (users, urlsForUser, urlDatabase, defaultTemplateVars, generate
   router.post('/:shortURL/edit', (req, res) => { // modifies existing url and refreshes
     const shortURL = req.params.shortURL;
     urlDatabase[req.params.shortURL].longURL = req.body.newLongURL;
-    console.log(urlDatabase, req.body.newLongURL);
     res.redirect(`/urls/${shortURL}`);
   });
   
